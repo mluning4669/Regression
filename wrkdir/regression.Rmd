@@ -1,0 +1,45 @@
+---
+title: "Assignment 3"
+output: html_notebook
+---
+
+1. (1p) Download the dataset college.csv and explore its overall structure. Get a summary statistics of each
+variable. Answer the following questions:
+• How many observation do you have in the data?
+• How many categorical and numeric variables you have in your data?
+
+```{r}
+clg_df = read.csv("College.csv")
+str(clg_df)
+```
+
+There are 777 observations, 2 categorical variables and 17 numeric variables.
+
+• Is there any missing value?
+```{r}
+sum(is.na(clg_df))
+```
+There appear to be no missing values in the dataset
+
+2. (1pt) Remove the first column (the name of the college)
+```{r}
+clg_df = clg_df[,-1]
+```
+
+3. (2 pts) Which variables are associated with “Apps”. Use “pairs”, “cor”, and side by side box plot with
+t.test to answer this question.
+
+```{r}
+clg_df = as.data.frame(unclass(clg_df), stringsAsFactors = TRUE)
+attach(clg_df)
+```
+Converting strings to factors and attaching the dataframe
+```{r}
+iqr = 3264 - 776
+iqr_index = (Apps > 776 - 1.5*iqr & Apps < 3264 + 1.5*iqr)
+Apps_so = Apps[iqr_index] #so means sans outliers
+Private_so = Private[iqr_index]
+plot(Apps_so~Private_so)
+t.test(Apps_so~Private_so)
+```
+
