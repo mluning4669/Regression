@@ -55,3 +55,20 @@ cor(Apps, clg_df[-c(1, 2)])
 ```
 
 From the above tests I've concluded that private, Accept, Enroll, F.Undergrad, and Private are associated with Apps
+
+4. (1pt) plot the histogram of the number of applications “Apps” variable. Explain what the histogram shows?
+```{r}
+hist(Apps)
+```
+
+Judging from the shape this historgram is right-skewed (possibly j-shaped if you see the small hump between 45k and 50k) with a mean between 0 and 10000
+
+5. (1pt) replace the “Top10perc” variable with a factor variable “Elite” with two levels: “Yes” if 50% or more of new students coming from the top 10% of their high school class (that is, if Top10Perc>=50) , and “No” if less than 50% of new students are coming from the top10% of their high school class.
+
+```{r}
+clg_df$Elite = factor(ifelse(clg_df$Top10perc >= 50, "Yes", "No"))
+clg_df = clg_df[-5]
+```
+
+6. (1pt) is the Elite variable you created above associated with the “Apps” variable? Don’t just say yes or no, you should explain your answer by plots and test statistics.
+
