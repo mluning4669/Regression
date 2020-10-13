@@ -42,4 +42,16 @@ Private_so = Private[iqr_index]
 plot(Apps_so~Private_so)
 t.test(Apps_so~Private_so)
 ```
+```{r}
+pairs(clg_df[2:6])
+pairs(clg_df[c(2,7:9)])
+pairs(clg_df[c(2,10:12)])
+pairs(clg_df[c(2,13:15)])
+pairs(clg_df[c(2,16:18)])
+```
 
+```{r}
+cor(Apps, clg_df[-c(1, 2)])
+```
+
+From the above tests I've concluded that private, Accept, Enroll, F.Undergrad, and Private are associated with Apps
