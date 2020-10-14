@@ -72,3 +72,16 @@ clg_df = clg_df[-5]
 
 6. (1pt) is the Elite variable you created above associated with the “Apps” variable? Don’t just say yes or no, you should explain your answer by plots and test statistics.
 
+```{r}
+Elite_so = clg_df$Elite[iqr_index]
+plot(Apps_so~Elite_so)
+t.test(Apps_so~Elite_so)
+```
+
+Based on the side-by-side box plot and the p-value = 0.01% < 5% it follows that Elite is associated with Apps
+
+7. (1pt) normalize all numerical features (except the “Apps” variable) using z-score standardization using “scale” function
+```{r}
+
+```
+
