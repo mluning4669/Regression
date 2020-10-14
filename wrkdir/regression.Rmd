@@ -82,6 +82,15 @@ Based on the side-by-side box plot and the p-value = 0.01% < 5% it follows that 
 
 7. (1pt) normalize all numerical features (except the “Apps” variable) using z-score standardization using “scale” function
 ```{r}
-
+clg_norm = as.data.frame(scale(clg_df[-c(1,2,18)], center=TRUE, scale=TRUE))
+clg_norm$Private = clg_df$Private
+clg_norm$Apps = clg_df$Apps
+clg_norm$Elite = clg_df$Elite
 ```
+
+8. set the random seed: set.seed(123)
+```{r}
+set.seed(123)
+```
+
 
