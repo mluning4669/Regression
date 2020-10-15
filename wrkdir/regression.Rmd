@@ -54,7 +54,7 @@ pairs(clg_df[c(2,16:18)])
 cor(Apps, clg_df[-c(1, 2)])
 ```
 
-From the above tests I've concluded that private, Accept, Enroll, F.Undergrad, and Private are associated with Apps
+From the above tests I've concluded that Accept, Enroll, F.Undergrad, and Private are associated with Apps
 
 4. (1pt) plot the histogram of the number of applications “Apps” variable. Explain what the histogram shows?
 ```{r}
@@ -93,4 +93,22 @@ clg_norm$Elite = clg_df$Elite
 set.seed(123)
 ```
 
+9. (2 pt) Use caret package to run 10 fold cross validation using linear regression method on all features.
 
+Print the resulting model to see the cross validation RMSE. 
+In addition, take a summary of the model and interpret the coefficients. 
+Which coefficients are statistically different from zero? What does this meant?
+```{r}
+#install caret package and use the library
+install.packages("caret")
+library(caret)
+```
+```{r}
+train.control = trainControl(method = "cv", number = 10)
+model = train(Apps ~ Accept + Enroll + F.Undergrad + Private + Elite, data = clg_norm, method = "lm", trControl = train.control)
+```
+```{r}
+model
+summary(model)
+```
+According to the p-test [Pr(>|t|)] results Accept, Enroll, and EliteYes are statistically different from zero, which means that the true values for these coefficients are unlikely to be zero
