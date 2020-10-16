@@ -2,7 +2,7 @@
 title: "Assignment 3"
 output: html_notebook
 ---
-
+#Problem 1 - Predicting number of college applications
 1. (1p) Download the dataset college.csv and explore its overall structure. Get a summary statistics of each
 variable. Answer the following questions:
 • How many observation do you have in the data?
@@ -130,4 +130,41 @@ summary(step.model$finalModel)
 ```
 Accept, Expend, and EliteYes were selected
 
+12. (2 pt) Split the data into train and test ( you can use the first 621 rows for training and rest for testing). use
+“rpart” function to create a regression tree model from the training data. Get the predictions on testing data
+and compute the RMSE.
+
+```{r}
+install.packages("rpart")
+library(rpart)
+```
+
+```{r}
+clg_train = clg_df[1:621, ]
+clg_test = clg_df[622:777, ]
+m.rpart = rpart(Apps ~ ., data = clg_train)
+p.rpart = predict(m.rpart, clg_test)
+(mean((clg_test$Apps - p.rpart)^2))^0.5
+```
+The RMSE is 1448.4
+
+#Problem 2 - Predicting loan default
+1- Set the random seed, set.seed(123), and split the data to train/test as we did in slide 37 of week6
+lectures.
+```{r}
+credit = read.csv("credit.csv")
+```
+```{r}
+set.seed(123)
+train_sample <- sample(1000, 900)
+credit_train <- credit[train_sample, ]
+credit_test <- credit[-train_sample, ]
+```
+
+2- (2pt) Train a logistic regression model on the train data using the glm package and use it to predict
+the default for the test data
+
+```{r}
+
+```
 
