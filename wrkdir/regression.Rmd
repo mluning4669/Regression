@@ -51,10 +51,10 @@ pairs(clg_df[c(2,16:18)])
 ```
 
 ```{r}
-cor(Apps, clg_df[-c(1, 2)])
+cor(Apps, clg_df[ ,-c(1, 2)])
 ```
 
-From the above tests I've concluded that Accept, Enroll, F.Undergrad, and Private are associated with Apps
+From the above tests I've concluded that Accept, Enroll, F.Undergrad, Private, Top25perc, P.Undergrad, Outstate, PhD, and Terminal are mildly to highly associated with Apps
 
 4. (1pt) plot the histogram of the number of applications “Apps” variable. Explain what the histogram shows?
 ```{r}
@@ -105,7 +105,7 @@ library(caret)
 ```
 ```{r}
 train.control = trainControl(method = "cv", number = 10)
-model = train(Apps ~ Accept + Enroll + F.Undergrad + Private + Elite, data = clg_norm, method = "lm", trControl = train.control)
+model = train(Apps ~ ., data = clg_norm, method = "lm", trControl = train.control)
 ```
 ```{r}
 model
@@ -121,7 +121,13 @@ set.seed(123)
 11. (3 pts) Use caret and leap packages to run a 10 fold cross validation using step wise linear regression method with backward selection (i.e., method=”leapBackward). The train method by default uses maximum of 4 predictors and reports the best models with 1..4 predictors. We need to change this parameter to consider 1..16 predictors. So inside your train function, add the following parameter tuneGrid = data.frame(nvmax = 1:16) . Which model (with how many variables or nvmax ) has the lowest RMSE. Take the summary of the final model to see which variables are selected in the model with the lowest RMSE?
 
 ```{r}
-#train.control = trainControl(method = "cv", number = 10)
-#model = train(Apps ~ Accept + Enroll + F.Undergrad + Private + Elite, data = clg_norm, method = "leapBackward", trControl = train.control, tuneGrid)
+train.control = trainControl(method = "cv", number = 10)
+step.model = train(Apps ~ ., data = clg_norm, method = "leapBackward", trControl = train.control, tuneGrid = data.frame(nvmax = 1:16))
 ```
+```{r}
+step.model
+summary(step.model$finalModel)
+```
+Accept, Expend, and EliteYes were selected
+
 
