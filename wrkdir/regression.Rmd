@@ -112,3 +112,16 @@ model
 summary(model)
 ```
 According to the p-test [Pr(>|t|)] results Accept, Enroll, and EliteYes are statistically different from zero, which means that the true values for these coefficients are unlikely to be zero
+
+10. Set the random seed again. We need to do this before each training to ensure we get the same folds in cross validation. Set.seed(123) so we can compare the models using their cross validation RMSE.
+```{r}
+set.seed(123)
+```
+
+11. (3 pts) Use caret and leap packages to run a 10 fold cross validation using step wise linear regression method with backward selection (i.e., method=”leapBackward). The train method by default uses maximum of 4 predictors and reports the best models with 1..4 predictors. We need to change this parameter to consider 1..16 predictors. So inside your train function, add the following parameter tuneGrid = data.frame(nvmax = 1:16) . Which model (with how many variables or nvmax ) has the lowest RMSE. Take the summary of the final model to see which variables are selected in the model with the lowest RMSE?
+
+```{r}
+#train.control = trainControl(method = "cv", number = 10)
+#model = train(Apps ~ Accept + Enroll + F.Undergrad + Private + Elite, data = clg_norm, method = "leapBackward", trControl = train.control, tuneGrid)
+```
+
