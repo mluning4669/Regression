@@ -154,15 +154,15 @@ lectures.
 ```{r}
 credit = read.csv("credit.csv", stringsAsFactors = TRUE)
 credit_norm = as.data.frame(scale(credit[-c(1,3,4,6,7,11,12,14,16,17)], center=TRUE, scale=TRUE))
-credit_norm$checking_balance = credit[1]
-credit_norm$credit_history = credit[3]
-credit_norm$purpose = credit[4]
-credit_norm$savings_balance = credit[6]
-credit_norm$employment_duration = credit[7]
-credit_norm$other_credit = credit[11]
-credit_norm$housing = credit[12]
-credit_norm$job = credit[14]
-credit_norm$phone = credit[16]
+credit_norm$checking_balance = credit$checking_balance
+credit_norm$credit_history = credit$credit_history
+credit_norm$purpose = credit$purpose
+credit_norm$savings_balance = credit$savings_balance
+credit_norm$employment_duration = credit$employment_duration
+credit_norm$other_credit = credit$other_credit
+credit_norm$housing = credit$housing
+credit_norm$job = credit$job
+credit_norm$phone = credit$phone
 ```
 ```{r}
 set.seed(123)
@@ -175,6 +175,30 @@ credit_test <- credit[-train_sample, ]
 
 ```{r}
 logistic_model = glm(default~., data = credit_train, family = "binomial")
+summary(logistic_model)
+logistic_predict = predict(logistic_model, credit_test, type = "response")
 ```
 
 3- (2pt)Compare the predictions with the actual default labels in the test data. What is the false positive rate and false negative rate of your model? How does your logistic regression model compare with the classification models we used in week 6 lectures?
+
+```{r}
+hist(logistic_predict)
+```
+
+```{r}
+predicted.label = factor(ifelse(logistic_predict > 0.5, "no", "yes"))
+actual.label = credit_test$default
+t = table(predicted.label, actual.label)
+t
+error = (t[1,2] + t[2,1])/sum(t)
+print(paste("the error is" ,formatC(error*100,digits = 3),"%"))
+
+fpr = (t[1,2]/(t[1,2] + t[2,2]))
+print(paste("false positive rate:",formatC(fpr*100,digits = 3),"%"))
+
+fnr = (t[2,1]/(t[2,1]+t[2,2]))
+print(paste("false negative rate:",formatC(fnr*100,digits = 3),"%"))
+```
+
+With an error of 74% I'd say that this model is considerably worse at predicting defaults that the model used in lecture 6 with its error rate of 27%
+
