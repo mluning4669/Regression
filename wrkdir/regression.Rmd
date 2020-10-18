@@ -2,7 +2,7 @@
 title: "Assignment 3"
 output: html_notebook
 ---
-#Problem 1 - Predicting number of college applications
+Problem 1 - Predicting number of college applications
 1. (1p) Download the dataset college.csv and explore its overall structure. Get a summary statistics of each
 variable. Answer the following questions:
 • How many observation do you have in the data?
@@ -148,7 +148,7 @@ p.rpart = predict(m.rpart, clg_test)
 ```
 The RMSE is 1448.4
 
-#Problem 2 - Predicting loan default
+Problem 2 - Predicting loan default
 1- Set the random seed, set.seed(123), and split the data to train/test as we did in slide 37 of week6
 lectures.
 ```{r}
@@ -202,3 +202,32 @@ print(paste("false negative rate:",formatC(fnr*100,digits = 3),"%"))
 
 With an error of 74% I'd say that this model is considerably worse at predicting defaults that the model used in lecture 6 with its error rate of 27%
 
+4- (6pt) The outcome variable “default” is imbalanced that is, the number of observations with default=NO is double the number of observations with default=Yes. Most classification models trained on imbalanced data are biased towards predicting the majority class and yield a higher classification error on the minority class. One way to deal with class imbalance problem is to downsample the majority class; meaning randomly sample the observations in the majority class to make it the same size as the minority class. While this approach might work for larger dataset with large enough samples in the minority class, for smaller dataset, it will result in loss of information. Another approach to deal with class imbalance is to use oversampling; meaning generating syntactic samples and add it to the minority class to make it the same size as the majority class. A popular method for generating syntactic samples is called SMOTE (Syntactic Minority Oversampling Technique) which uses KNN to generate syntactic samples for the minority class. Please watch this short Youtube video to understand SMOTE, Then install DMwR package in R and use the SMOTE function to generate syntactic training data for the minority class. Please note that oversampling or under-sampling should only be applied to the training data and the testing data should be untouched. Use perc.over=100 argument in the SMOTE function and leave the other parameters as default to create a balanced training data. Then train a logistic regression model on this balanced data and evaluate it on your test data. Compare the False Positive and the False Negative Rates of the model trained on the balanced data to your previous model trained on the imbalance data and discuss the differences.
+
+```{r}
+install.packages("DMwR")
+library(DMwR)
+```
+```{r}
+set.seed(123)
+credit_smote = SMOTE(default ~ ., data = credit_train, perc.over = 100)
+log_model_smote = glm(default~., data = credit_smote, family = "binomial")
+summary(log_model_smote)
+log_predict_smote = predict(log_model_smote, credit_test, type = "response")
+```
+
+```{r}
+predicted.label = factor(ifelse(log_predict_smote > 0.5, "no", "yes"))
+actual.label = credit_test$default
+t = table(predicted.label, actual.label)
+t
+error = (t[1,2] + t[2,1])/sum(t)
+print(paste("the error is" ,formatC(error*100,digits = 3),"%"))
+
+fpr = (t[1,2]/(t[1,2] + t[2,2]))
+print(paste("false positive rate:",formatC(fpr*100,digits = 3),"%"))
+
+fnr = (t[2,1]/(t[2,1]+t[2,2]))
+print(paste("false negative rate:",formatC(fnr*100,digits = 3),"%"))
+```
+The fpr and fnr are higher for the smote model than the model trained with the unmodified training data however the error is a bit less. Overall there isn't really an improvement with smote data over the original data. I suppose varying perc.over and perc.under until better results are yielded would be a better way to go about improving model performance (this is assuming you're being mindful not to overfit)
